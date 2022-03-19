@@ -1,0 +1,51 @@
+repos:
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.17.0
+    hooks:
+      - id: gitlint
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-toml
+      - id: check-json
+      - id: check-yaml
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: isort (import sorting)
+        args: ["--check-only"]
+
+  - repo: https://github.com/psf/black
+    rev: 22.1.0
+    hooks:
+      - id: black
+        name: black (formatter)
+        args: ["--check"]
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+      - id: autoflake
+        name: autoflake (remove unused imports and variables)
+        args:
+          [
+            "--check",
+            "--remove-all-unused-imports",
+            "--remove-unused-variables",
+            "--ignore-init-module-imports",
+          ]
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        stages: [push]
+        language: system
+        entry: pytest
+        pass_filenames: false
+        types: [python]
