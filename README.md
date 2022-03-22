@@ -15,3 +15,11 @@ poetry install -no-dev
 pip install poetry
 poetry install
 ```
+
+2. Enable pre-commit hooks
+
+```
+pre-commit install # linting for every commit
+pre-commit install pre-push # run pytest before push
+pre-commit install --hook-type commit-msg # commit message format checking
+```
