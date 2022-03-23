@@ -2,7 +2,7 @@ image: "python:3.8"
 
 before_script:
   - python3 --version
-  - cd source/
+  # - cd source/
 #   - python3 -m venv .env
 #   - source .env/bin/activate
 #   - python3 -m pip install --default-timeout=100 -r requirements.txt
