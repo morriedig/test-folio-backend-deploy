@@ -87,12 +87,31 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
+name = "certifi"
+version = "2021.10.8"
+description = "Python package for providing Mozilla's CA Bundle."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "cfgv"
 version = "3.3.1"
 description = "Validate configuration and produce human readable error messages."
 category = "dev"
 optional = false
 python-versions = ">=3.6.1"
+
+[[package]]
+name = "charset-normalizer"
+version = "2.0.12"
+description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
+category = "main"
+optional = false
+python-versions = ">=3.5.0"
+
+[package.extras]
+unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "click"
@@ -171,14 +190,6 @@ django = ">=2.2"
 pytz = "*"
 
 [[package]]
-name = "environ"
-version = "1.0"
-description = "Stack Based Globals Management"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "filelock"
 version = "3.6.0"
 description = "A platform independent file lock."
@@ -236,6 +247,14 @@ python-versions = ">=3.7"
 
 [package.extras]
 license = ["ukkonen"]
+
+[[package]]
+name = "idna"
+version = "3.3"
+description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "iniconfig"
@@ -426,6 +445,24 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "requests"
+version = "2.27.1"
+description = "Python HTTP for Humans."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
+
+[package.dependencies]
+certifi = ">=2017.4.17"
+charset-normalizer = {version = ">=2.0.0,<2.1.0", markers = "python_version >= \"3\""}
+idna = {version = ">=2.5,<4", markers = "python_version >= \"3\""}
+urllib3 = ">=1.21.1,<1.27"
+
+[package.extras]
+socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
+use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
+
+[[package]]
 name = "sh"
 version = "1.14.2"
 description = "Python subprocess replacement"
@@ -466,6 +503,17 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "twstock"
+version = "1.3.1"
+description = "Taiwan Stock Opendata with realtime - twstock"
+category = "main"
+optional = false
+python-versions = ">=3"
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "4.1.1"
 description = "Backported and Experimental Type Hints for Python 3.6+"
@@ -480,6 +528,19 @@ description = "Provider of IANA time zone data"
 category = "main"
 optional = false
 python-versions = ">=2"
+
+[[package]]
+name = "urllib3"
+version = "1.26.9"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
+
+[package.extras]
+brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "virtualenv"
@@ -502,7 +563,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "b869ed054fd468f2ea027528ba042e0fe35fcb1c432de6c1c0edf4c666169942"
+content-hash = "3ab1022ec714b6df3e7150051f0353e5c2fb7774604e8bfaa804bcd5b4d49d65"
 
 [metadata.files]
 arrow = [
@@ -567,9 +628,17 @@ black = [
     {file = "black-22.1.0-py3-none-any.whl", hash = "sha256:3524739d76b6b3ed1132422bf9d82123cd1705086723bc3e235ca39fd21c667d"},
     {file = "black-22.1.0.tar.gz", hash = "sha256:a7c0192d35635f6fc1174be575cb7915e92e5dd629ee79fdaf0dcfa41a80afb5"},
 ]
+certifi = [
+    {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
+    {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
+]
 cfgv = [
     {file = "cfgv-3.3.1-py2.py3-none-any.whl", hash = "sha256:c6a0883f3917a037485059700b9e75da2464e6c27051014ad85ba6aaa5884426"},
     {file = "cfgv-3.3.1.tar.gz", hash = "sha256:f5a830efb9ce7a445376bb66ec94c638a9787422f96264c98edc6bdeed8ab736"},
+]
+charset-normalizer = [
+    {file = "charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"},
+    {file = "charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"},
 ]
 click = [
     {file = "click-8.0.3-py3-none-any.whl", hash = "sha256:353f466495adaeb40b6b5f592f9f91cb22372351c84caeb068132442a4518ef3"},
@@ -599,11 +668,6 @@ djangorestframework = [
     {file = "djangorestframework-3.13.1-py3-none-any.whl", hash = "sha256:24c4bf58ed7e85d1fe4ba250ab2da926d263cd57d64b03e8dcef0ac683f8b1aa"},
     {file = "djangorestframework-3.13.1.tar.gz", hash = "sha256:0c33407ce23acc68eca2a6e46424b008c9c02eceb8cf18581921d0092bc1f2ee"},
 ]
-environ = [
-    {file = "environ-1.0.linux-i686.tar.gz", hash = "sha256:9266e62dd8004f3bf181b24c97aa129844e7e7ec87bf3ed06ef3888293212011"},
-    {file = "environ-1.0.tar.gz", hash = "sha256:4df7f1dfeb7d1c988d2e19a8bd5d547a526e0400aeb35adf732032472f35dcb0"},
-    {file = "environ-1.0.win32.exe", hash = "sha256:052ded34331655b9c7982abd5681a066b9aaf9adf33b3412c7e842ce959e40b0"},
-]
 filelock = [
     {file = "filelock-3.6.0-py3-none-any.whl", hash = "sha256:f8314284bfffbdcfa0ff3d7992b023d4c628ced6feb957351d4c48d059f56bc0"},
     {file = "filelock-3.6.0.tar.gz", hash = "sha256:9cd540a9352e432c7246a48fe4e8712b10acb1df2ad1f30e8c070b82ae1fed85"},
@@ -619,6 +683,10 @@ gitlint-core = [
 identify = [
     {file = "identify-2.4.12-py2.py3-none-any.whl", hash = "sha256:5f06b14366bd1facb88b00540a1de05b69b310cbc2654db3c7e07fa3a4339323"},
     {file = "identify-2.4.12.tar.gz", hash = "sha256:3f3244a559290e7d3deb9e9adc7b33594c1bc85a9dd82e0f1be519bf12a1ec17"},
+]
+idna = [
+    {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
+    {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -777,6 +845,10 @@ pyyaml = [
     {file = "PyYAML-6.0-cp39-cp39-win_amd64.whl", hash = "sha256:b3d267842bf12586ba6c734f89d1f5b871df0273157918b0ccefa29deb05c21c"},
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
 ]
+requests = [
+    {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
+    {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
+]
 sh = [
     {file = "sh-1.14.2-py2.py3-none-any.whl", hash = "sha256:4921ac9c1a77ec8084bdfaf152fe14138e2b3557cc740002c1a97076321fce8a"},
     {file = "sh-1.14.2.tar.gz", hash = "sha256:9d7bd0334d494b2a4609fe521b2107438cdb21c0e469ffeeb191489883d6fe0d"},
@@ -797,6 +869,10 @@ tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
+twstock = [
+    {file = "twstock-1.3.1-py3-none-any.whl", hash = "sha256:bc2b33cd467e6f52538a7227256bf8f9cb214dac3f85e9f8ce386b7cf6061b19"},
+    {file = "twstock-1.3.1.tar.gz", hash = "sha256:2d5114c9c992990f6523489d26136c5e2b2f1c81fd09bb61e386b5166189fdf2"},
+]
 typing-extensions = [
     {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
     {file = "typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42"},
@@ -804,6 +880,10 @@ typing-extensions = [
 tzdata = [
     {file = "tzdata-2022.1-py2.py3-none-any.whl", hash = "sha256:238e70234214138ed7b4e8a0fab0e5e13872edab3be586ab8198c407620e2ab9"},
     {file = "tzdata-2022.1.tar.gz", hash = "sha256:8b536a8ec63dc0751342b3984193a3118f8fca2afe25752bb9b7fffd398552d3"},
+]
+urllib3 = [
+    {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
+    {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
 ]
 virtualenv = [
     {file = "virtualenv-20.13.4-py2.py3-none-any.whl", hash = "sha256:c3e01300fb8495bc00ed70741f5271fc95fed067eb7106297be73d30879af60c"},
