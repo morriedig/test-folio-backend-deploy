@@ -1,5 +1,5 @@
 import datetime
-
+import pandas as pd
 # from datetime import timedelta
 import pytz
 import twstock
@@ -74,14 +74,10 @@ def insert_test_data(request):
 
 
 def insert_stock(request):
-    twstock.__update_codes()
-    ks = list(twstock.codes.keys())
-    stocks = []
-    for i in range(len(ks)):
-        if twstock.codes[ks[i]].market == "上市" and twstock.codes[ks[i]].type == "股票":
-            stocks.append(twstock.codes[ks[i]])
-    for stock in stocks:
-        s = Stock(sid=stock.code, name=stock.name, group=stock.group)
+    twstocks = pd.read_csv('engine/twse_equities.csv')
+    stocks = twstocks[(twstocks['market'] == "上市") & (twstocks['type'] == "股票")]
+    for i,stock in stocks.iterrows():
+        s = Stock(sid=stock['code'], name=stock['name'], group=stock['group'])
         s.save()
     test_message = "insert stock done"
     return render(request, "insert_test.html", locals())
@@ -89,8 +85,8 @@ def insert_stock(request):
 
 def insert_stock_price(request):
     stocks = Stock.objects.all()
-    i = ""
-    for target_stock in stocks:
+    m = ""
+    for i, target_stock in enumerate(stocks):
         if target_stock.sid == "s0001":
             continue
         sid = target_stock.sid
@@ -98,14 +94,16 @@ def insert_stock_price(request):
         target_price = stock.fetch_from(2022, 3)  # 取用2022/03至今每天的交易資料
         stock_data = [[tp.date, tp.close] for tp in target_price]
         for sd in stock_data:
-            sp = Stockprice(
-                spid=str(target_stock.sid) + str(sd[0].replace(tzinfo=pytz.UTC)),
-                stock=Stock.objects.filter(sid=sid)[0],
-                price=sd[1],
-                time=sd[0].replace(tzinfo=pytz.UTC),
-            )
-            sp.save()
-            i += str(sd[0])
-        break
-    test_message = "insert stock" + sid + "for" + str(i) + "price done"
+            if sd[1] != None:
+                sp = Stockprice(
+                    spid=str(target_stock.sid) + str(sd[0].replace(tzinfo=pytz.UTC)),
+                    stock=Stock.objects.filter(sid=sid)[0],
+                    price=sd[1],
+                    time=sd[0].replace(tzinfo=pytz.UTC),
+                )
+                sp.save()
+        m += str(target_stock.sid) + '\n'
+        if i == 100:
+            break
+    test_message = "insert stock:\n" + str(m) + "price done"
     return render(request, "insert_test.html", locals())
