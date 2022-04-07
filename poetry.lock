@@ -2,7 +2,7 @@
 name = "arrow"
 version = "1.2.1"
 description = "Better dates & times for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -216,7 +216,7 @@ testing = ["covdefaults (>=1.2.0)", "coverage (>=4)", "pytest (>=4)", "pytest-co
 name = "gitlint"
 version = "0.17.0"
 description = "Git commit message linter written in python, checks your commit messages for style."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -227,7 +227,7 @@ gitlint-core = {version = "0.17.0", extras = ["trusted-deps"]}
 name = "gitlint-core"
 version = "0.17.0"
 description = "Git commit message linter written in python, checks your commit messages for style."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -520,7 +520,7 @@ use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 name = "sh"
 version = "1.14.2"
 description = "Python subprocess replacement"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -617,7 +617,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "3e767ca4676372465258af7b5805415e16b28a9844c100429df5230338068e59"
+content-hash = "618dc2c2dff4c00546e11047ad8eb0f8dd173ed9ee2875b1275482efa048f4cd"
 
 [metadata.files]
 arrow = [
