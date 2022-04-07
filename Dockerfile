@@ -29,7 +29,7 @@ RUN apt-get update \
     && apt-get -y install libpq-dev gcc
 RUN pip install "poetry==$POETRY_VERSION" && poetry --version \
 	&& poetry install \
-	&& adduser --disabled-password --no-create-home code 
+	&& adduser --disabled-password --no-create-home code
 
-#用 user 可以指定使用者權限來寫入特定的 volume 
+#用 user 可以指定使用者權限來寫入特定的 volume
 USER code
