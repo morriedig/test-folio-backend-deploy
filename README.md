@@ -28,7 +28,7 @@ docker-compose run --rm web sh -c "python manage.py makemigrations" # 進到 Dja
 
 ### Enable pre-commit hooks
 ```
-pre-commit install # linting for every commit
-pre-commit install pre-push # run pytest before push
-pre-commit install --hook-type commit-msg # commit message format checking
+pre-commit install
+pre-commit install -t pre-push
+pre-commit install -t commit-msg
 ```
