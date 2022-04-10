@@ -28,6 +28,7 @@ class Portfolio(models.Model):
     owner = models.ForeignKey("User", models.CASCADE, db_column="owner")
     cash = models.FloatField()
     budget = models.FloatField()
+    stocks = models.TextField(null=True)
     is_public = models.BooleanField(default=False)
     is_alive = models.BooleanField(default=True)
 
