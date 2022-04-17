@@ -32,3 +32,11 @@ pre-commit install
 pre-commit install -t pre-push
 pre-commit install -t commit-msg
 ```
+## deploy to Heroku
+
+```shell=
+# Add the heroku remote repo(do it once)
+heroku git:remote -a folio-backend-staging
+heroku container:push web
+heroku container:release web
+```
