@@ -17,19 +17,16 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
 	POETRY_VIRTUALENVS_CREATE=false \
 	POETRY_CACHE_DIR='/var/cache/pypoetry'
 
-COPY ./folio_backend /folio_backend
-COPY pyproject.toml poetry.lock /folio_backend/
-
-# set work directory
-WORKDIR /folio_backend
-EXPOSE 8000
-
-#adduser: 如果沒有 create user，這樣產生出來的檔案都會是 root 權限
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc
-RUN pip install "poetry==$POETRY_VERSION" && poetry --version \
-	&& poetry install \
-	&& adduser --disabled-password --no-create-home code
+	&& apt-get -y install libpq-dev gcc
 
-#用 user 可以指定使用者權限來寫入特定的 volume
+COPY pyproject.toml .
+COPY poetry.lock .
+RUN pip install "poetry==$POETRY_VERSION" && poetry --version \
+	&& poetry install --no-dev
+
+WORKDIR /folio_backend
+
+# create user，避免檔案檔案都是 root 權限，導致有機會發生 injection
+RUN adduser --disabled-password --no-create-home code
 USER code
