@@ -11,7 +11,7 @@ from .serializers import Transactionserializer
 # Create your views here.
 class Transaction(GenericAPIView):
     serializer_class = Transactionserializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **krgs):
         try:
@@ -26,7 +26,7 @@ class Transaction(GenericAPIView):
             portfolio = Portfolio.objects.get(id=pid)
 
             new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
-            # new_transaction.save()
+            new_transaction.save()
 
             return Response("success")
         except:
