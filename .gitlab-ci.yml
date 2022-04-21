@@ -25,6 +25,7 @@ lint-test-job: # This job also runs in the test stage.
 unit-test-job: # This job runs in the test stage.
   stage: test # It only starts when the job in the build stage completes successfully.
   script:
+    - cp $ENV_FILE_DEV .env
     - echo "Running unit tests..."
     - cd folio_backend && poetry run python manage.py test
 
