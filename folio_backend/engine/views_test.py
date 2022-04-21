@@ -14,7 +14,7 @@ def insert_test_data(request):
     u1 = User(
         name="provider1",
         bankaccount="123456789123",
-        email="r10725021@ntu.edu.tw",
+        email="r10725020@ntu.edu.tw",
         password="password",
         id_number="A123456789",
     )

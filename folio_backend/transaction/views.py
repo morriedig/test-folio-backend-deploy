@@ -25,6 +25,8 @@ class Transaction(GenericAPIView):
             price = stock.price
             portfolio = Portfolio.objects.get(id=pid)
 
+            if portfolio.cash <= amount:
+                return Response("not enough cash for stock")
             new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
             new_transaction.save()
 
