@@ -22,5 +22,5 @@ urlpatterns = [
     path("insert_test_data/", insert_test_data),
     path("insert_stock/", insert_stock),
     path("insert_stock_price/", insert_stock_price),
-    path("transaction/", include("transaction.urls")),
+    path("api/", include("engine.urls")),
 ]

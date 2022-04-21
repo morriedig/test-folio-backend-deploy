@@ -1,15 +1,16 @@
 from datetime import datetime
 
 from engine.models import *
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .serializers import Transactionserializer
+from .transaction_serializers import Transactionserializer
 
 
 # Create your views here.
-class Transaction(GenericAPIView):
+class TransactionAPIView(GenericAPIView):
     serializer_class = Transactionserializer
     permission_classes = [IsAuthenticated]
 
@@ -26,10 +27,10 @@ class Transaction(GenericAPIView):
             portfolio = Portfolio.objects.get(id=pid)
 
             if portfolio.cash <= amount:
-                return Response("not enough cash for stock")
+                return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
             new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
             new_transaction.save()
 
-            return Response("success")
+            return Response("SUCCESS", status=status.HTTP_200_OK)
         except:
-            return Response("what's wrong with you")
+            return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
