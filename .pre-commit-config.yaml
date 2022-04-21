@@ -42,10 +42,10 @@ repos:
 
   - repo: local
     hooks:
-      - id: pytest
-        name: pytest
+      - id: django-test
+        name: django-test
         stages: [push]
         language: system
-        entry: pytest
+        entry: cd folio_backend && python manage.py test
         pass_filenames: false
         types: [python]
