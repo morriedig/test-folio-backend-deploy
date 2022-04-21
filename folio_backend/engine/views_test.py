@@ -77,6 +77,10 @@ def insert_stock(request):
     for i, stock in stocks.iterrows():
         s = Stock(code=stock["code"], name=stock["name"], group=stock["group"])
         s.save()
+    # cash
+    s = Stock(code="0000", name="cash", group="現金")
+    s.save()
+
     test_message = "insert stock done"
     return render(request, "insert_test.html", locals())
 
@@ -84,6 +88,7 @@ def insert_stock(request):
 def insert_stock_price(request):
     stocks = Stock.objects.all()
     m = ""
+    # stocks
     for i, target_stock in enumerate(stocks):
         if target_stock.code == "s01":
             continue
@@ -102,5 +107,18 @@ def insert_stock_price(request):
         m += str(target_stock.code) + "\n"
         if i == 100:
             break
+    # cash
+    base = datetime.datetime.today()
+    gap = base - datetime.datetime(2022, 3, 1)
+    date_list = [base - datetime.timedelta(days=x) for x in range(gap.days + 1)]
+    date_list = [x.replace(hour=0, minute=0, second=0, microsecond=0) for x in date_list][::-1]
+    for dt in date_list:
+        cash = Stockprice(
+            stock=Stock.objects.filter(code="0000")[0],
+            price=1,
+            time=dt.replace(tzinfo=pytz.UTC),
+        )
+        cash.save()
+    m += "cash"
     test_message = "insert stock:\n" + str(m) + "price done"
     return render(request, "insert_test.html", locals())
