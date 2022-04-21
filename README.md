@@ -49,3 +49,12 @@ pre-commit install -t commit-msg
 ### 如何在 docker 環境下安裝 package
 
 照這篇[解答](https://stackoverflow.com/questions/63027514/install-package-in-running-docker-container)做，或是 poetry add 後重新 docker-compose build
+
+## 如何 deploy to Heroku
+
+```shell=
+# Add the heroku remote repo(do it once)
+heroku git:remote -a folio-backend-staging
+heroku container:push web
+heroku container:release web
+```

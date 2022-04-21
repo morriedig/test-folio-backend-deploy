@@ -30,3 +30,5 @@ WORKDIR /folio_backend
 # create user，避免檔案檔案都是 root 權限，導致有機會發生 injection
 RUN adduser --disabled-password --no-create-home code
 USER code
+
+CMD gunicorn folio_backend.wsgi:application --bind 0.0.0.0:$PORT
