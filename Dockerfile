@@ -33,3 +33,5 @@ RUN pip install "poetry==$POETRY_VERSION" && poetry --version \
 
 #用 user 可以指定使用者權限來寫入特定的 volume
 USER code
+
+CMD gunicorn folio_backend.wsgi:application --bind 0.0.0.0:$PORT
