@@ -6,24 +6,28 @@ from .models import MyUser
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    # password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
 
     class Meta:
         model = MyUser
-        fields = ["account", "username", "email", "id_number", "password", "password2"]
+        fields = ["account", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def save(self):
+        # Simplify the required data
         user = MyUser(
             account=self.validated_data["account"],
-            username=self.validated_data["username"],
             email=self.validated_data["email"],
-            id_number=self.validated_data["id_number"],
+            # username=self.validated_data["username"],
+            # id_number=self.validated_data["id_number"],
         )
         password = self.validated_data["password"]
-        password2 = self.validated_data["password2"]
-        if password != password2:
-            raise serializers.ValidationError({"password": "Passwords must match."})
+
+        # # ignore second password confirmation
+        # password2 = self.validated_data["password2"]
+        # if password != password2:
+        #     raise serializers.ValidationError({"password": "Passwords must match."})
+
         user.set_password(password)
         user.save()
         return user

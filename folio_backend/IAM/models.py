@@ -44,14 +44,14 @@ class MyUser(AbstractBaseUser):
         unique=True,
     )
     id_number = models.CharField(max_length=10, unique=True)
-    account = models.CharField(max_length=10, unique=True)
-    username = models.CharField(max_length=10)
+    account = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=30)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = MyUserManager()
 
     USERNAME_FIELD = "account"
-    REQUIRED_FIELDS = ["id_number", "email", "username"]
+    REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
         return self.account
