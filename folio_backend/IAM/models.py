@@ -10,7 +10,7 @@ DISCOUNT_CODE_TYPES_CHOICES = [
 
 # Create your models here
 class MyUserManager(BaseUserManager):
-    def create_user(self, account, username, email, id_number, password=None):
+    def create_user(self, account, email, password=None):
         """
         Creates and saves a User with the given account, username, email, id number and password.
         """
@@ -19,20 +19,19 @@ class MyUserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            id_number=id_number,
             account=account,
-            username=username,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, account, username, email, id_number, password=None):
+    def create_superuser(self, account, email, password=None):
         """
         Creates and saves a superuser with the given account, username, email, id number and password.
         """
-        user = self.create_user(email=email, password=password, id_number=id_number, account=account, username=username)
+        user = self.create_user(password=password, account=account, email=email)
+        # user = self.create_user(email=email, password=password, id_number=id_number, account=account, username=username)
         user.is_admin = True
         user.save(using=self._db)
         return user
@@ -43,9 +42,9 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    id_number = models.CharField(max_length=10, unique=True)
-    account = models.CharField(max_length=30, unique=True)
-    username = models.CharField(max_length=30)
+    id_number = models.CharField(max_length=255)
+    account = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = MyUserManager()

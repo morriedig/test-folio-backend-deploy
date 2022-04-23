@@ -10,6 +10,7 @@ services:
                 DJANGO_ENV: development
         command: >
             sh -c "python manage.py wait_for_db &&
+                    python manage.py makemigrations &&
                     python manage.py migrate &&
                     python manage.py runserver 0.0.0.0:8000"
         ports:
@@ -17,7 +18,7 @@ services:
         volumes:
             - ./folio_backend:/folio_backend
         env_file:
-            - ./.env.dev
+            - ./.env
         depends_on:
             - db
     db:
