@@ -24,8 +24,10 @@ class RegistrationView(APIView):
                 description="Register a new user.",
                 examples={
                     "application/json": {
+                        "message": "Register Successfully",
                         "account": "test",
-                        "username": "test",
+                        "id": "0",
+                        "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90oxNjQ5Nzg",
                     }
                 },
             ),
@@ -37,7 +39,32 @@ class RegistrationView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            # Login after register
+            account = request.data["account"]
+            password = request.data["password"]
+            user = authenticate(request, account=account, password=password)
+            response = Response()
+            if user is not None:
+                if user.is_active:
+                    auth_data = get_tokens_for_user(user)
+                    response.set_cookie(
+                        key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+                        value=auth_data["refresh"],
+                        expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+                        secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+                        httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+                        samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+                    )
+                    csrf.get_token(request)
+                    response.data = {
+                        "message": "Login Successfully",
+                        "id": user.id,
+                        "account": user.account,
+                        "access": auth_data["access"],
+                    }
+                    response.status_code = status.HTTP_201_CREATED
+                    return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -86,7 +113,7 @@ class LoginView(APIView):
                 description="",
                 examples={
                     "application/json": {
-                        "message": "Invalid username or password",
+                        "message": "Invalid account or password",
                     }
                 },
             ),
@@ -121,7 +148,7 @@ class LoginView(APIView):
                 return response
             else:
                 return Response({"message": "This account is not active!"}, status=status.HTTP_404_NOT_FOUND)
-        return Response({"message": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"message": "Invalid account or password"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(APIView):
