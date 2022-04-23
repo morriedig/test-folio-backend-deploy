@@ -13,26 +13,31 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
-from decouple import config
+import dj_database_url
+import environ
+from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-SECRET_KEY = config("SECRET_KEY")
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+env = environ.Env()
+SECRET_KEY = env("SECRET_KEY", default=config("SECRET_KEY"))
+DEBUG = env.bool("DEBUG", default=config("DEBUG", default=False, cast=bool))
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=config("ALLOWED_HOSTS", cast=Csv()))
+DATABASES = {}
+# FIXME: Remove if else.
+# By http://code.cupidhuang.com/cu2189191862/folio-backend/-/issues/32
+if env.bool("SSL_REQUIRE", default=False):
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+else:
+    DATABASES["default"] = dj_database_url.config(conn_max_age=600, default=dj_database_url.config("DATABASE_URL"))
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -46,10 +51,12 @@ INSTALLED_APPS = [
     "drf_yasg",
     "engine",
     "IAM",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -90,18 +97,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "folio_backend.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -132,11 +127,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

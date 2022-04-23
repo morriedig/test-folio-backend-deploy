@@ -43,7 +43,7 @@ ignore=body-is-missing
 
 
 [title-match-regex]
-regex=(?i)^(Ci|Docs|Feat|Fix|Refactor|Style|Chore): .+$
+regex=^(ci|docs|feat|fix|refactor|style|chore): .+$
 
 
 # [body-changed-file-mention]
