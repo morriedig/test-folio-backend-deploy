@@ -45,6 +45,7 @@ class MyUser(AbstractBaseUser):
     id_number = models.CharField(max_length=255)
     account = models.CharField(max_length=255, unique=True)
     username = models.CharField(max_length=255)
+    bankaccount = models.TextField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = MyUserManager()
