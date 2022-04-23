@@ -18,8 +18,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user = MyUser(
             account=self.validated_data["account"],
             email=self.validated_data["email"],
-            # username=self.validated_data["username"],
-            # id_number=self.validated_data["id_number"],
         )
         password = self.validated_data["password"]
 
