@@ -25,7 +25,7 @@ services:
         image: postgres:13.0-alpine
         restart: unless-stopped
         env_file:
-            - ./.env.dev
+            - ./.env
         volumes:
             - postgres_data:/var/lib/postgresql/data/
 
