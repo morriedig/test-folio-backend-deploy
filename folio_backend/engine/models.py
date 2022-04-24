@@ -9,10 +9,10 @@ class Follow(models.Model):
     portfolio = models.ForeignKey("Portfolio", models.CASCADE, db_column="portfolio")
     user = models.ForeignKey("User", models.CASCADE, db_column="user")
     starttime = models.DateTimeField()
-    endtime = models.DateTimeField()
+    # endtime = models.DateTimeField()
     budget = models.FloatField()
-    cash = models.FloatField()
-    stop_limit = models.FloatField()
+    # cash = models.FloatField()
+    # stop_limit = models.FloatField()
     is_alive = models.BooleanField(default=True)
 
     class Meta:
@@ -26,8 +26,8 @@ class Portfolio(models.Model):
     name = models.TextField(default="我是一個投資組合")
     description = models.TextField(default="世界你好")
     owner = models.ForeignKey("User", models.CASCADE, db_column="owner")
-    cash = models.FloatField(default=10000)
-    budget = models.FloatField(default=10000)
+    follow_price = models.FloatField(default=1000, blank=True)
+    budget = models.FloatField(default=10000, blank=True)
     is_public = models.BooleanField(default=False)
     is_alive = models.BooleanField(default=True)
 
