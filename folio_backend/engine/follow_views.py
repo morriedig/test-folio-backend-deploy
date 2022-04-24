@@ -18,7 +18,7 @@ class FollowAPIView(GenericAPIView):
     def post(self, request, *args, **krgs):
         try:
             data = request.data
-            if data["is_follow"] == "1":
+            if data["is_follow"] == 1:
                 # user = User.objects.get(id=1)
                 cash = float(data["cash"])
                 pid = data["pid"]
@@ -40,7 +40,7 @@ class FollowAPIView(GenericAPIView):
                 target_owner = User.objects.filter(id=owner.id)
                 target_user.update(budget=user.budget - portfolio.follow_price - cash)
                 target_owner.update(budget=owner.budget + portfolio.follow_price)
-            elif data["is_follow"] == "0":
+            elif data["is_follow"] == 0:
                 money = 0.0
                 # user = User.objects.get(id=1)
                 pid = data["pid"]
