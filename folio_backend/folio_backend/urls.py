@@ -37,13 +37,10 @@ urlpatterns += [
     path("insert_test_data/", insert_test_data),
     path("insert_stock/", insert_stock),
     path("insert_stock_price/", insert_stock_price),
-<<<<<<< HEAD
     # tao
     # path("api/portfolio/", )
     # path("api/portfolio/<int:id>", PortfolioView.as_view()),
     path("api/portfolio/", poh.router_),
     path("api/portfolio/<int:id>", poh.router_),
-=======
     path("api/", include("engine.urls")),
->>>>>>> develop
 ]
