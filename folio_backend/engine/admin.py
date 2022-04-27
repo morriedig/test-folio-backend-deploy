@@ -1,11 +1,11 @@
 from django.contrib import admin
 
 # Register your models here.
-from engine.models import Follow, Portfolio, Stock, Stockprice, Transaction, User
+from .models import *
 
-admin.site.register(Follow)
+admin.site.register(User)
 admin.site.register(Portfolio)
 admin.site.register(Stock)
-admin.site.register(Stockprice)
 admin.site.register(Transaction)
-admin.site.register(User)
+admin.site.register(Stockprice)
+admin.site.register(Follow)

@@ -9,10 +9,10 @@ class Follow(models.Model):
     portfolio = models.ForeignKey("Portfolio", models.CASCADE, db_column="portfolio")
     user = models.ForeignKey("User", models.CASCADE, db_column="user")
     starttime = models.DateTimeField()
-    endtime = models.DateTimeField()
+    # endtime = models.DateTimeField()
     budget = models.FloatField()
-    cash = models.FloatField()
-    stop_limit = models.FloatField()
+    # cash = models.FloatField()
+    # stop_limit = models.FloatField()
     is_alive = models.BooleanField(default=True)
 
     class Meta:
@@ -23,12 +23,17 @@ class Follow(models.Model):
 
 class Portfolio(models.Model):
     # id = models.BigIntegerField(primary_key = True)
-    name = models.TextField()
-    description = models.TextField()
+    name = models.TextField(default="我是一個投資組合")
+    description = models.TextField(default="世界你好")
     owner = models.ForeignKey("User", models.CASCADE, db_column="owner")
+<<<<<<< HEAD
     cash = models.FloatField()
     budget = models.FloatField()
     stocks = models.TextField(null=True)
+=======
+    follow_price = models.FloatField(default=1000, blank=True)
+    budget = models.FloatField(default=10000, blank=True)
+>>>>>>> develop
     is_public = models.BooleanField(default=False)
     is_alive = models.BooleanField(default=True)
 
@@ -76,12 +81,12 @@ class Transaction(models.Model):
 
 class User(models.Model):
     # id = models.BigIntegerField(primary_key = True)
-    name = models.TextField()
-    bankaccount = models.TextField()
-    email = models.TextField()
-    password = models.TextField()
-    # budget = models.FloatField(blank=True, null=True)
-    id_number = models.TextField()
+    name = models.TextField(default="我是已閱讀並同意以上條款的帳號")
+    bankaccount = models.TextField(default="123456789")
+    email = models.TextField(default="iHaveNoEmail")
+    password = models.TextField(default="")
+    budget = models.FloatField(default=10000, null=True)
+    id_number = models.TextField(default="A123456789", blank=True)
 
     class Meta:
         managed = True
