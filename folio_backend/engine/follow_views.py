@@ -9,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .follow_serializers import Followserializer
-from .utils import *
+
+# from .utils import *
 
 
 # Create your views here.
