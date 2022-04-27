@@ -6,15 +6,15 @@ import pandas as pd
 import pytz
 import twstock
 from django.shortcuts import render
-
 from IAM.models import MyUser
+
 from .models import *
 
 
 def insert_test_data(request):
     u1 = MyUser(
         username="provider1",
-        account='test1',
+        account="test1",
         bankaccount="123456789123",
         email="r10725022@ntu.edu.tw",
         password="password",
@@ -23,7 +23,7 @@ def insert_test_data(request):
     )
     u2 = MyUser(
         username="follower1",
-        account='test2',
+        account="test2",
         bankaccount="223891234",
         email="b06705006@ntu.edu.tw",
         password="password",
