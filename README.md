@@ -63,3 +63,5 @@ heroku container:release web
 	python manage.py migrate engine 0002 --fake
 	python manage.py migrate engine 0003 --fake
 	python manage.py migrate
+
+   #### remember to delete your volumn.
