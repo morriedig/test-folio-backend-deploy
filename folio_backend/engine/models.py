@@ -2,12 +2,12 @@
 
 # Create your models here.
 from django.db import models
-
+from django.conf import settings
 
 class Follow(models.Model):
     # id = models.BigIntegerField(primary_key = True)
     portfolio = models.ForeignKey("Portfolio", models.CASCADE, db_column="portfolio")
-    user = models.ForeignKey("IAM.MyUser", models.CASCADE, db_column="user")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, db_column="user")
     starttime = models.DateTimeField()
     # endtime = models.DateTimeField()
     budget = models.FloatField()
@@ -25,7 +25,7 @@ class Portfolio(models.Model):
     # id = models.BigIntegerField(primary_key = True)
     name = models.TextField(default="我是一個投資組合")
     description = models.TextField(default="世界你好")
-    owner = models.ForeignKey("IAM.MyUser", models.CASCADE, db_column="owner")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, db_column="owner")
     follow_price = models.FloatField(default=1000, blank=True)
     budget = models.FloatField(default=10000, blank=True)
     is_public = models.BooleanField(default=False)
