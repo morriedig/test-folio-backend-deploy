@@ -58,3 +58,8 @@ heroku git:remote -a folio-backend-staging
 heroku container:push web
 heroku container:release web
 ```
+## migrate for latest db
+
+	python manage.py migrate engine 0002 --fake
+	python manage.py migrate engine 0003 --fake
+	python manage.py migrate
