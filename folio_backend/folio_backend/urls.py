@@ -5,8 +5,6 @@ from drf_yasg.views import get_schema_view
 from engine.views_test import *
 from rest_framework import permissions
 
-from folio_backend.engine.views import PortfolioOperationsHandler
-
 schema_view = get_schema_view(
     openapi.Info(
         title="Folio API",
@@ -24,7 +22,6 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
-poh = PortfolioOperationsHandler()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -42,7 +39,7 @@ urlpatterns += [
     # tao
     # path("api/portfolio/", )
     # path("api/portfolio/<int:id>", PortfolioView.as_view()),
-    path("api/portfolio/", poh.router_),
-    path("api/portfolio/<int:id>", poh.router_),
+    # path("api/portfolio/", poh.router_),
+    # path("api/portfolio/<int:id>", poh.router_),
     path("api/", include("engine.urls")),
 ]
