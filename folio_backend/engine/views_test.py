@@ -6,33 +6,38 @@ import pandas as pd
 import pytz
 import twstock
 from django.shortcuts import render
+from IAM.models import MyUser
 
 from .models import *
 
 
 def insert_test_data(request):
-    u1 = User(
-        name="provider1",
+    u1 = MyUser(
+        username="provider1",
+        account="test1",
         bankaccount="123456789123",
-        email="r10725020@ntu.edu.tw",
+        email="r10725022@ntu.edu.tw",
         password="password",
         id_number="A123456789",
+        budget=1000000.0,
     )
-    u2 = User(
-        name="follower1",
-        bankaccount="234567891234",
-        email="b06705004@ntu.edu.tw",
+    u2 = MyUser(
+        username="follower1",
+        account="test2",
+        bankaccount="223891234",
+        email="b06705006@ntu.edu.tw",
         password="password",
         id_number="A123456780",
+        budget=1000000.0,
     )
     p1 = Portfolio(
         name="投資組合1",
         description="測試用",
         owner=u1,
         budget=5000,
-        cash=5000,
         is_public=True,
         is_alive=True,
+        follow_price=10,
     )
     s1 = Stock(code="s01", name="公司1")
     u1.save()
@@ -42,26 +47,23 @@ def insert_test_data(request):
     # test_message = Stock.objects.filter(id=1)
     # return render(request, "insert_test.html", locals())
     sp1 = Stockprice(
-        stock=Stock.objects.filter(id=1)[0],
+        stock=Stock.objects.all()[0],
         price=100,
         time=datetime.datetime(2022, 3, 1, 0, 0, 0),
     )
     t1 = Transaction(
-        portfolio=Portfolio.objects.filter(id=1)[0],
-        stock=Stock.objects.filter(id=1)[0],
+        portfolio=Portfolio.objects.all()[0],
+        stock=Stock.objects.all()[0],
         amount=10,
         price=100,
         time=datetime.datetime(2022, 3, 1, 23, 55, 59),
     )
     f1 = Follow(
-        portfolio=Portfolio.objects.filter(id=1)[0],
-        user=User.objects.filter(id=1)[0],
+        portfolio=Portfolio.objects.all()[0],
+        user=MyUser.objects.all()[0],
         starttime=datetime.datetime(2022, 2, 1, 23, 55, 59),
-        endtime=datetime.datetime(2022, 4, 1, 23, 55, 59),
         budget=1000,
-        cash=1000,
         is_alive=True,
-        stop_limit=0.1,
     )
     sp1.save()
     t1.save()
