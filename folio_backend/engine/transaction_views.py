@@ -38,14 +38,14 @@ class ROICalculator(GenericAPIView):
         stocks_now = {}
 
         for t in transaction_before_week_ago:
-            if stocks_week_ago.get(t["stock_id"]) == None:
-                stocks_week_ago[t["stock_id"]] = {"cost": 0.0, "amount": 0.0}
-            old_cost = stocks_week_ago[t["stock_id"]]["cost"] * stocks_week_ago[t["stock_id"]]["amount"]
-            new_cost = t["amount"] * t["price"]
-            new_amount = stocks_week_ago[t["stock_id"]]["amount"] + t["amount"]
-
-            stocks_week_ago[t["stock_id"]]["cost"] = (old_cost + new_cost) / (new_amount) if new_amount != 0 else 0
-            stocks_week_ago[t["stock_id"]]["amount"] = new_amount
+            if t["amount"] > 0:
+                if stocks_week_ago.get(t["stock_id"]) == None:
+                    stocks_week_ago[t["stock_id"]] = {"cost": 0.0, "amount": 0.0}
+                old_cost = stocks_week_ago[t["stock_id"]]["cost"] * stocks_week_ago[t["stock_id"]]["amount"]
+                new_cost = t["amount"] * t["price"]
+                new_amount = stocks_week_ago[t["stock_id"]]["amount"] + t["amount"]
+                stocks_week_ago[t["stock_id"]]["cost"] = (old_cost + new_cost) / (new_amount) if new_amount != 0 else 0
+                stocks_week_ago[t["stock_id"]]["amount"] = new_amount
 
         stocks_now = stocks_week_ago
         cash_flow = 0
