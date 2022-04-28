@@ -1,11 +1,8 @@
-from cmath import exp
-from datetime import datetime
-
-from engine.models import *
+from engine.models import Portfolio
 from IAM.models import MyUser
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -16,7 +13,7 @@ from .serializers import PortfolioDetailSerializer, PortfolioSerializer
 class PortfolioAPIView(GenericAPIView, ListModelMixin):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kargs):
         try:
@@ -37,21 +34,18 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
             budget=data["budget"],
             is_public=data["is_public"],
             is_alive=data["is_alive"],
-            owner=MyUser.objects.get(pk=int(data["owner"]))
-            # owner=data["owner"],
+            owner=MyUser.objects.get(pk=int(data["owner"])),
         )
         new_portfolio.save()
         return Response("SUCCESS", status=status.HTTP_200_OK)
-
-    # except:
-    #     return Response("no auth", status=status.HTTP_400_BAD_REQUEST)
 
 
 class PortfolioAPIDetailView(GenericAPIView):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioDetailSerializer
     lookup_field = "ID"
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, ID):
         try:
             return Portfolio.objects.get(pk=ID)
@@ -74,66 +68,3 @@ class PortfolioAPIDetailView(GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # # try:
-        # instance = self.get_object(ID)
-        # instance.name = request.data.get("name")
-        # instance.save()
-
-        # serializer = self.get_serializer(instance)
-        # serializer.is_valid()
-        # self.perform_update(serializer)
-
-        # return Response(serializer.data)
-
-    # except:
-    #     return Response("no auth or no profolio", status=status.HTTP_400_BAD_REQUEST)
-
-
-# class PortfolioOperationsHandler:
-#     def __init__(self):
-#         self.serializer = GetAllPortfolioSerializer()
-
-#     def router_(self, request, id=None):
-#         # print(request)
-#         if request.method == "GET" and id == None:
-#             return self.get_all_portfolio()
-#         elif request.method == "GET" and id != None:
-#             return self.get_specific_portfolio(id)
-#         elif request.method == "POST" and id == None:
-#             return self.create_portfolio(request)
-#         elif request.method == "POST" and id != None:
-#             return self.update_portfolio(id)
-
-#     def get_all_portfolio(self):
-#         try:
-#             portfolios = self.serializer.get_all()
-#             return HttpResponse(portfolios, status=status.HTTP_200_OK)
-#         except:
-#             return HttpResponse({"message": "No auth or no profolio"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     def get_specific_portfolio(self, id):
-#         try:
-#             portfolio = self.serializer.get_specific(id)
-#             return HttpResponse(portfolio, status=status.HTTP_200_OK)
-#         except:
-#             return HttpResponse({"message": "no auth or no profolio, please login"}, status=status.HTTP_400_BAD_REQUEST)
-
-#     def create_portfolio(self, request):
-
-#         Portfolio.objects.create(
-#             name=request.POST["name"],
-#             description=request.POST["description"],
-#             owner=request.POST["owner"],
-#             cash=request.POST["cash"],
-#             budget=request.POST["budget"],
-#         )
-
-#     def update_portfolio(self, request, id):
-#         Portfolio.objects.update()
-#         p = Portfolio.objects.get(pk=id)
-#         p.name = request.POST["name"]
-#         p.is_public = request.POST["is_public"]
-#         p.description = request.POST["description"]
-#         p.budget = request.POST["budget"]
-#         p.save()
