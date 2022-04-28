@@ -3,9 +3,13 @@ from django.contrib import admin
 # Register your models here.
 from .models import *
 
-admin.site.register(User)
-admin.site.register(Portfolio)
-admin.site.register(Stock)
-admin.site.register(Transaction)
-admin.site.register(Stockprice)
-admin.site.register(Follow)
+
+class idAdmin(admin.ModelAdmin):
+    readonly_fields = ("id",)
+
+
+admin.site.register(Portfolio, idAdmin)
+admin.site.register(Stock, idAdmin)
+admin.site.register(Transaction, idAdmin)
+admin.site.register(Stockprice, idAdmin)
+admin.site.register(Follow, idAdmin)

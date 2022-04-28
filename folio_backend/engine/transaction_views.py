@@ -1,14 +1,46 @@
-import datetime
+from datetime import datetime
 
 from django.db.models import Q
+from engine.models import *
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Portfolio, Stockprice, Transaction
+from .transaction_serializers import Transactionserializer
+
+
+# Create your views here.
+class TransactionAPIView(GenericAPIView):
+    serializer_class = Transactionserializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **krgs):
+        try:
+            data = request.data
+            stock_code = data["stock"]
+            amount = data["cash"]
+            pid = data["pid"]
+
+            time = datetime.now()
+            stock = Stock.objects.get(code=stock_code)
+            price = stock.price
+            portfolio = Portfolio.objects.get(id=pid)
+
+            if portfolio.cash <= amount:
+                return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
+            new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
+            new_transaction.save()
+
+            return Response("SUCCESS", status=status.HTTP_200_OK)
+        except:
+            return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
 
 
 class ROICalculator(GenericAPIView):
+    serializer_class = Transactionserializer
+    permission_classes = [AllowAny]
+
     def __init__(self):
         pass
 
@@ -53,7 +85,6 @@ class ROICalculator(GenericAPIView):
         for t in transaction_week:
             if stocks_week_ago.get(t["stock_id"]) == None:
                 stocks_week_ago[t["stock_id"]] = {"cost": 0.0, "amount": 0.0}
-            # print(stocks_now)
             # sell stock: calculate cash flow and update amount
             if t["amount"] < 0:
                 amount = abs(t["amount"])
