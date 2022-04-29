@@ -21,8 +21,8 @@ class FollowAPIView(GenericAPIView):
     def post(self, request, *args, **krgs):
         try:
             data = request.data
+            user = request.user
             if data["is_follow"] == 1:
-                # user = MyUser.objects.get(id=1)
                 cash = float(data["cash"])
                 pid = data["pid"]
                 portfolio = Portfolio.objects.get(id=pid)
@@ -46,7 +46,6 @@ class FollowAPIView(GenericAPIView):
                 return Response("SUCCESS", status=status.HTTP_200_OK)
             elif data["is_follow"] == 0:
                 money = 0.0
-                # user = MyUser.objects.get(id=1)
                 pid = data["pid"]
                 portfolio = Portfolio.objects.get(id=pid)
                 follow = Follow.objects.filter(portfolio=portfolio, user=user, is_alive=True)
