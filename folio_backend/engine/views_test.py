@@ -96,7 +96,7 @@ def insert_test_stock_price(request):
         if target_stock.code == "s01":
             continue
         sid = target_stock.id
-        stock_data = [[datetime.datetime(2022, 4, 10 - i), random.uniform(10, 100)] for i in range(10)]
+        stock_data = [[datetime.datetime(2022, 4, i + 1), random.uniform(10, 100)] for i in range(10)]
         for sd in stock_data:
             if sd[1] != None:
                 sp = Stockprice(
