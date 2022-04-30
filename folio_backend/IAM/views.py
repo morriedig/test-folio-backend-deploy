@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 
 from .jwt_integration_view import DecoratedTokenRefreshView
 from .serializers import CookieTokenRefreshSerializer, PasswordChangeSerializer, RegistrationSerializer
@@ -222,4 +222,8 @@ class CookieTokenRefreshView(DecoratedTokenRefreshView):
                 samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
             )
             del response.data["refresh"]
+            access_token_obj = AccessToken(response.data["access"])
+            user_id = access_token_obj["user_id"]
+            response.data["id"] = user_id
+
         return super().finalize_response(request, response, *args, **kwargs)
