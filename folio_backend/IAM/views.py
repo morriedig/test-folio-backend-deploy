@@ -58,7 +58,7 @@ class RegistrationView(APIView):
                     )
                     csrf.get_token(request)
                     response.data = {
-                        "message": "Login Successfully",
+                        "message": "Register Successfully",
                         "id": user.id,
                         "account": user.account,
                         "access": auth_data["access"],
