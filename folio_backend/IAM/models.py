@@ -42,11 +42,11 @@ class MyUser(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    id_number = models.CharField(max_length=255)
+    id_number = models.CharField(max_length=255, default="")
     account = models.CharField(max_length=255, unique=True)
-    username = models.CharField(max_length=255)
-    bankaccount = models.TextField(max_length=255)
-    budget = models.FloatField(default=10000, null=True)
+    username = models.CharField(max_length=255, default="")
+    bankaccount = models.TextField(max_length=255, default="")
+    budget = models.FloatField(default=10000)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = MyUserManager()

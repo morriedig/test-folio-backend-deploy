@@ -26,6 +26,7 @@ class DecoratedTokenObtainPairView(TokenObtainPairView):
 
 class TokenRefreshResponseSerializer(serializers.Serializer):
     access = serializers.CharField()
+    id = serializers.IntegerField()
 
     def create(self, validated_data):
         raise NotImplementedError()
