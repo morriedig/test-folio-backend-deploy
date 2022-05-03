@@ -2,6 +2,7 @@ from django.urls import path
 
 from .follow_views import FollowAPIView
 from .transaction_views import ROICalculator, TransactionAPIView
+from .user.views import UserSelfView, UserSpecificView
 
 urlpatterns = [
     path("transaction/", TransactionAPIView.as_view()),
