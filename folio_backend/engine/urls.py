@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .follow_views import FollowAPIView
+from .stock_views import StockAPIView
 from .transaction_views import ROICalculator, TransactionAPIView
 from .user.views import UserSelfView, UserSpecificView
 from .stock_views import StockAPIView

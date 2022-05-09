@@ -3,6 +3,8 @@ from datetime import datetime
 from django.db.models import Sum
 from engine.models import *
 from IAM.models import *
+
+# from IAM.permissions import IsUserInfoCompleted
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +18,28 @@ from .follow_serializers import Followserializer
 # Create your views here.
 class FollowAPIView(GenericAPIView):
     serializer_class = Followserializer
+    # permission_classes = [IsUserInfoCompleted]
     permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **krgs):
+        try:
+            user = request.user
+            # uid = request.query_params.get("user", "")
+            # user = MyUser.objects.get(id=uid)
+            pid = request.query_params.get("pid", "")
+            if pid != "":
+                if user != Portfolio.objects.get(id=pid).owner:
+                    return Response("Not the owner", status=status.HTTP_401_UNAUTHORIZED)
+                else:
+                    portfolio = Portfolio.objects.get(id=pid)
+                    follow = Follow.objects.filter(portfolio=portfolio)
+                    serializer = Followserializer(follow, many=True)
+                    return Response(serializer.data)
+            follow = Follow.objects.filter(user=user)
+            serializer = Followserializer(follow, many=True)
+            return Response(serializer.data)
+        except:
+            return Response("Maybe somthing WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **krgs):
         try:
