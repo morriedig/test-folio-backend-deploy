@@ -35,5 +35,6 @@ urlpatterns += [
     path("insert_test_data/", insert_test_data),
     path("insert_stock/", insert_stock),
     path("insert_stock_price/", insert_stock_price),
+    path("insert_test_stock_price/", insert_test_stock_price),
     path("api/", include("engine.urls")),
 ]
