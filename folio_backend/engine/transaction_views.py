@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.db.models import Q
+from django.utils import timezone as datetime
 from engine.models import *
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -15,6 +14,40 @@ class TransactionAPIView(GenericAPIView):
     serializer_class = Transactionserializer
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, *args, **krgs):
+        try:
+
+            pid = request.query_params.get("pid", "")
+
+            portfolio = Portfolio.objects.get(id=pid)
+            owner = portfolio.owner
+            user = request.user
+            ans_stock = []
+            ans_amount = []
+            ans_portfolio = []
+            ans_time = []
+            ans_price = []
+            if owner != user:
+                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
+
+            transaction = Transaction.objects.filter(portfolio=portfolio).all()
+            for t in transaction:
+                ans_stock.append(t.stock.code)
+                ans_amount.append(t.amount)
+                ans_portfolio.append(t.portfolio.id)
+                ans_time.append(t.time)
+                ans_price.append(t.price)
+            ans = {
+                "stock": ans_stock,
+                "amount": ans_amount,
+                "portfolio": ans_portfolio,
+                "price": ans_price,
+                "time": ans_time,
+            }
+            return Response(ans, status=status.HTTP_200_OK)
+        except:
+            return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
+
     def post(self, request, *args, **krgs):
         try:
             data = request.data
@@ -24,12 +57,19 @@ class TransactionAPIView(GenericAPIView):
 
             time = datetime.now()
             stock = Stock.objects.get(code=stock_code)
-            price = stock.price
+            price = Stockprice.objects.filter(stock=stock)[0].price
             portfolio = Portfolio.objects.get(id=pid)
+            owner = portfolio.owner
+            user = request.user
 
-            if portfolio.cash <= amount:
+            if owner != user:
+                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
+            if portfolio.budget <= amount:
                 return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
+            portfolio.budget = portfolio.budget - amount
+            portfolio.save()
             new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
+
             new_transaction.save()
 
             return Response("SUCCESS", status=status.HTTP_200_OK)
@@ -52,7 +92,7 @@ class ROICalculator(GenericAPIView):
 
     def calculate(self, request, id=None):
         # step1 get transactions (create portfolio - a week ago) and (a week ago - now)
-        portfolio_now = Portfolio.objects.get(pk=id)
+        # portfolio_now = Portfolio.objects.get(pk=id)
         today = datetime.date.today()
         end_date = datetime.date(today.year, today.month, today.day)
         start_date = end_date - datetime.timedelta(days=7)
