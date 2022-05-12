@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.utils import timezone as datetime
 from engine.models import *
+from engine.utils import getCash
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -37,22 +38,28 @@ class TransactionAPIView(GenericAPIView):
         try:
             data = request.data
             stock_code = data["stock"]
-            amount = data["cash"]
+            amount = data["amount"]
             pid = data["pid"]
 
+            cash_stock = Stock.objects.get(code="0000")
+            print(cash_stock)
+            portfolio_cash = getCash(pid)
+            print(portfolio_cash)
             time = datetime.now()
             stock = Stock.objects.get(code=stock_code)
             price = Stockprice.objects.filter(stock=stock).last().price
             portfolio = Portfolio.objects.get(id=pid)
+            stock_cost = price * amount
             owner = portfolio.owner
             user = request.user
 
             if owner != user:
                 return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
-            if portfolio.budget <= amount:
+            if portfolio_cash <= stock_cost:
                 return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
-            portfolio.budget = portfolio.budget - amount
-            portfolio.save()
+
+            payment = Transaction(portfolio=portfolio, stock=cash_stock, amount=stock_cost * (-1), time=time, price=1)
+            payment.save()
             new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
 
             new_transaction.save()
