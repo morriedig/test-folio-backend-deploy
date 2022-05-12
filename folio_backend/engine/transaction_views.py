@@ -22,29 +22,14 @@ class TransactionAPIView(GenericAPIView):
             portfolio = Portfolio.objects.get(id=pid)
             owner = portfolio.owner
             user = request.user
-            ans_stock = []
-            ans_amount = []
-            ans_portfolio = []
-            ans_time = []
-            ans_price = []
+
             if owner != user:
                 return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
 
             transaction = Transaction.objects.filter(portfolio=portfolio).all()
-            for t in transaction:
-                ans_stock.append(t.stock.code)
-                ans_amount.append(t.amount)
-                ans_portfolio.append(t.portfolio.id)
-                ans_time.append(t.time)
-                ans_price.append(t.price)
-            ans = {
-                "stock": ans_stock,
-                "amount": ans_amount,
-                "portfolio": ans_portfolio,
-                "price": ans_price,
-                "time": ans_time,
-            }
-            return Response(ans, status=status.HTTP_200_OK)
+            ans = Transactionserializer(transaction, many=True)
+
+            return Response(ans.data, status=status.HTTP_200_OK)
         except:
             return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,7 +42,7 @@ class TransactionAPIView(GenericAPIView):
 
             time = datetime.now()
             stock = Stock.objects.get(code=stock_code)
-            price = Stockprice.objects.filter(stock=stock)[0].price
+            price = Stockprice.objects.filter(stock=stock).last().price
             portfolio = Portfolio.objects.get(id=pid)
             owner = portfolio.owner
             user = request.user
