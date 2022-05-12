@@ -5,6 +5,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from .models import Stock
 from .stock_serializers import Stockserializer
 
 
@@ -15,11 +16,11 @@ class StockAPIView(GenericAPIView):
 
     def get(self, request, *args, **krgs):
         try:
-            code = request.query_params.get("code", "")
-            name = request.query_params.get("name", "")
-            if code != "":
+            code = request.query_params.get("code", None)
+            name = request.query_params.get("name", None)
+            if code != None:
                 stock = Stock.objects.filter(code__startswith=code)
-            elif name != "":
+            elif name != None:
                 stock = Stock.objects.filter(name__startswith=name)
             else:
                 return Response("NO NAME OR CODE IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
