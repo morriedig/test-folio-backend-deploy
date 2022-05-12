@@ -67,14 +67,27 @@ MIDDLEWARE = [
 ]
 
 # TODO: need to set UI port!!
-# CORS_ALLOWED_ORIGINS = [
-#     "*"
-#     # "http://127.0.0.1:8000",
-# ]
-CORS_ORIGIN_ALLOW_ALL = True
-
-
+CORS_ALLOWED_ORIGINS = [
+    # "*",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://sdm-folio.herokuapp.com",
+]
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_URLS_REGEX = r"^/.*$"
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000", "http://localhost:3000", "https://sdm-folio.herokuapp.com"]
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SAMESITE = "None"
 
 
 ROOT_URLCONF = "folio_backend.urls"
@@ -180,10 +193,10 @@ SIMPLE_JWT = {
     # custom
     "AUTH_COOKIE": "refresh_token",  # Cookie name. Enables cookies if value is set.
     "AUTH_COOKIE_DOMAIN": None,  # A string like "example.com", or None for standard domain cookie.
-    "AUTH_COOKIE_SECURE": False,  # Whether the auth cookies should be secure (https:// only).
+    "AUTH_COOKIE_SECURE": True,  # 晟維改成True # Whether the auth cookies should be secure (https:// only).
     "AUTH_COOKIE_HTTP_ONLY": True,  # Http only cookie flag.It's not fetch by javascript.
     "AUTH_COOKIE_PATH": "/",  # The path of the auth cookie.
-    "AUTH_COOKIE_SAMESITE": "strict",  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
+    "AUTH_COOKIE_SAMESITE": "None",  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
     "AUTH_COOKIE_MAX_AGE": 3600 * 24 * 14,  # 14 days, then cookie will disappear
 }
 
