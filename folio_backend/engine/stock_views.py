@@ -18,9 +18,9 @@ class StockAPIView(GenericAPIView):
         try:
             code = request.query_params.get("code", None)
             name = request.query_params.get("name", None)
-            if code != None:
+            if code:
                 stock = Stock.objects.filter(code__startswith=code)
-            elif name != None:
+            elif name:
                 stock = Stock.objects.filter(name__startswith=name)
             else:
                 return Response("NO NAME OR CODE IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
