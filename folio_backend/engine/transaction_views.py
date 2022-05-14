@@ -42,9 +42,7 @@ class TransactionAPIView(GenericAPIView):
             pid = data["pid"]
 
             cash_stock = Stock.objects.get(code="0000")
-            print(cash_stock)
             portfolio_cash = getCash(pid)
-            print(portfolio_cash)
             time = datetime.now()
             stock = Stock.objects.get(code=stock_code)
             price = Stockprice.objects.filter(stock=stock).last().price
