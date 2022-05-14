@@ -52,7 +52,7 @@ class TransactionAPIView(GenericAPIView):
             user = request.user
 
             if owner != user:
-                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
+                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_401_UNAUTHORIZED)
             if portfolio_cash <= stock_cost:
                 return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
 
