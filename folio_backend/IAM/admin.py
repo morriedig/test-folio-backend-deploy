@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from rules.contrib.admin import ObjectPermissionsModelAdmin
 
 from .models import MyUser
 
@@ -48,7 +48,7 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(ObjectPermissionsModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 

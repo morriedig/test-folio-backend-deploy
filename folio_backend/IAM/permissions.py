@@ -1,4 +1,4 @@
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import BasePermission
 
 
@@ -20,6 +20,6 @@ class IsUserInfoCompleted(BasePermission):
             if is_done:
                 return True
             else:
-                raise ValidationError(detail=response)
+                raise PermissionDenied(detail=response)
 
         return False
