@@ -1,3 +1,4 @@
+from engine import rules
 from IAM.models import MyUser
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView
@@ -11,6 +12,18 @@ class UserSelfView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, GenericAP
 
     queryset = MyUser.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method in ["POST"]:
+            self.permission_classes.append(rules.UserCreatePermission)
+        elif self.request.method in ["GET"]:
+            self.permission_classes.append(rules.UserRetrievePermission)
+        elif self.request.method in ["PUT", "PATCH"]:
+            self.permission_classes.append(rules.UserUpdatePermission)
+        elif self.request.method in ["DELETE"]:
+            self.permission_classes.append(rules.UserDeletePermission)
+
+        return [permission() for permission in self.permission_classes]
 
     def get_object(self):
         return self.request.user

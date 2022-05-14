@@ -614,6 +614,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "rules"
+version = "3.3"
+description = "Awesome Django authorization, without the database"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "sh"
 version = "1.14.2"
 description = "Python subprocess replacement"
@@ -733,7 +741,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "997c3d16b8000e1c4ad9420b8f88f85847c01afad01bd08f5fc593ec79bd060f"
+content-hash = "0745f8d75f576db18c395048a27fee858f1de69edff55a7e17cfaa16f2800557"
 
 [metadata.files]
 arrow = [
@@ -1219,6 +1227,10 @@ requests = [
     {file = "ruamel.yaml.clib-0.2.6-cp39-cp39-win32.whl", hash = "sha256:3fb9575a5acd13031c57a62cc7823e5d2ff8bc3835ba4d94b921b4e6ee664104"},
     {file = "ruamel.yaml.clib-0.2.6-cp39-cp39-win_amd64.whl", hash = "sha256:825d5fccef6da42f3c8eccd4281af399f21c02b32d98e113dbc631ea6a6ecbc7"},
     {file = "ruamel.yaml.clib-0.2.6.tar.gz", hash = "sha256:4ff604ce439abb20794f05613c374759ce10e3595d1867764dd1ae675b85acbd"},
+]
+rules = [
+    {file = "rules-3.3-py2.py3-none-any.whl", hash = "sha256:12c8bbab5f54560e68528fcca7abc0e162c35ac882e3cc0daed40ac49c963070"},
+    {file = "rules-3.3.tar.gz", hash = "sha256:bf7bea8b724b73c36a622714c1b3557620c187a2ee05321a2ac8ab7472dc4464"},
 ]
 sh = [
     {file = "sh-1.14.2-py2.py3-none-any.whl", hash = "sha256:4921ac9c1a77ec8084bdfaf152fe14138e2b3557cc740002c1a97076321fce8a"},

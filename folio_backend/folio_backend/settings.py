@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "rules.apps.AutodiscoverRulesConfig",
     "corsheaders",
     "drf_yasg",
     "engine",
@@ -162,6 +163,11 @@ REST_FRAMEWORK = {
     ],
 }
 
+AUTHENTICATION_BACKENDS = (
+    "rules.permissions.ObjectPermissionBackend",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
 SWAGGER_SETTINGS = {
     "USE_SESSION_AUTH": False,
     "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}},
@@ -199,6 +205,7 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_SAMESITE": "None",  # Whether to set the flag restricting cookie leaks on cross-site requests. This can be 'Lax', 'Strict', or None to disable the flag.
     "AUTH_COOKIE_MAX_AGE": 3600 * 24 * 14,  # 14 days, then cookie will disappear
 }
+
 
 AUTH_PROFILE_MODULE = "IAM.MyUser"
 
