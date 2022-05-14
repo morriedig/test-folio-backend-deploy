@@ -120,6 +120,7 @@ class FollowDeletePermission(BasePermission):
 # Transaction API
 class TransactionCreatePermission(BasePermission):
     def has_object_permission(self, request, view, db_portfolio):
+        # for this permission, please use a Portfolio object as a argument
         return request.user.has_perm("engine.transaction.create", db_portfolio)
 
 
