@@ -12,6 +12,16 @@ def getStockValue(pid):
     return value
 
 
+def getCash(pid):
+    value = 0
+    portfolio = Portfolio.objects.get(id=pid)
+    cash = Stock.objects.get(code="0000")
+    transaction = Transaction.objects.filter(portfolio=portfolio, stock=cash)
+    for tran in transaction:
+        value += tran.amount
+    return value
+
+
 def checkBudget(uid, cash):
     user_budget = User.objects.get(id=uid).budget
     return cash <= user_budget

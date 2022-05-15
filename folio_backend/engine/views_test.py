@@ -15,18 +15,18 @@ from .models import *
 def insert_test_data(request):
     u1 = MyUser(
         username="provider1",
-        account="test1",
+        account="testing",
         bankaccount="123456789123",
-        email="r10725022@ntu.edu.tw",
-        password="password",
+        email="r107250222@ntu.edu.tw",
+        password="Asdqwe",
         id_number="A123456789",
         budget=1000000.0,
     )
     u2 = MyUser(
         username="follower1",
-        account="test2",
+        account="test21",
         bankaccount="223891234",
-        email="b06705006@ntu.edu.tw",
+        email="b067050061@ntu.edu.tw",
         password="password",
         id_number="A123456780",
         budget=1000000.0,
