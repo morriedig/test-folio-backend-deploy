@@ -2,69 +2,84 @@ from django.db.models import Q
 from django.utils import timezone as datetime
 from engine.models import *
 from engine.utils import getCash
+from IAM.permissions import IsUserInfoCompleted
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from .rules import *
 from .transaction_serializers import Transactionserializer
 
 
 # Create your views here.
 class TransactionAPIView(GenericAPIView):
     serializer_class = Transactionserializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsUserInfoCompleted]
+
+    def get_permissions(self):
+        if self.request.method in ["POST"]:
+            self.permission_classes.append(TransactionCreatePermission)
+        elif self.request.method in ["GET"]:
+            self.permission_classes.append(TransactionRetrievePermission)
+
+        return [permission() for permission in self.permission_classes]
 
     def get(self, request, *args, **krgs):
-        try:
 
-            pid = request.query_params.get("pid", "")
+        pid = request.query_params.get("pid", "")
+        if pid == "":
+            return Response("MISSING PID IN REQUEST", status=status.HTTP_400_BAD_REQUEST)
+        if Portfolio.objects.filter(id=pid).count() == 0:
+            return Response("PORTFOLIO " + str(pid) + " DOES NOT EXIST", status=status.HTTP_404_NOT_FOUND)
+        portfolio = Portfolio.objects.get(id=pid)
 
-            portfolio = Portfolio.objects.get(id=pid)
-            owner = portfolio.owner
-            user = request.user
+        self.check_object_permissions(self.request, portfolio)
 
-            if owner != user:
-                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_402_PAYMENT_REQUIRED)
+        transaction = Transaction.objects.filter(portfolio=portfolio).all()
+        ans = Transactionserializer(transaction, many=True)
 
-            transaction = Transaction.objects.filter(portfolio=portfolio).all()
-            ans = Transactionserializer(transaction, many=True)
-
-            return Response(ans.data, status=status.HTTP_200_OK)
-        except:
-            return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
+        return Response(ans.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **krgs):
-        try:
-            data = request.data
-            stock_code = data["stock"]
-            amount = data["amount"]
-            pid = data["pid"]
 
-            cash_stock = Stock.objects.get(code="0000")
-            portfolio_cash = getCash(pid)
-            time = datetime.now()
-            stock = Stock.objects.get(code=stock_code)
-            price = Stockprice.objects.filter(stock=stock).last().price
-            portfolio = Portfolio.objects.get(id=pid)
-            stock_cost = price * amount
-            owner = portfolio.owner
-            user = request.user
+        data = request.data
+        if "stock" not in data:
+            return Response("MISSING stock IN REQUEST", status=status.HTTP_400_BAD_REQUEST)
+        if "amount" not in data:
+            return Response("MISSING amount IN REQUEST", status=status.HTTP_400_BAD_REQUEST)
+        if "pid" not in data:
+            return Response("MISSING pid IN REQUEST", status=status.HTTP_400_BAD_REQUEST)
+        stock_code = data["stock"]
+        amount = data["amount"]
+        pid = data["pid"]
 
-            if owner != user:
-                return Response("YOU CAN'T MAKE TRANSACTION FOR OTHER", status=status.HTTP_401_UNAUTHORIZED)
-            if portfolio_cash <= stock_cost:
-                return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
+        cash_stock = Stock.objects.get(code="0000")
+        portfolio_cash = getCash(pid)
+        time = datetime.now()
+        if Stock.objects.get(code=stock_code) is None:
+            return Response("STOCK " + str(stock_code) + " DOES NOT EXIST", status=status.HTTP_404_NOT_FOUND)
+        stock = Stock.objects.get(code=stock_code)
+        price = Stockprice.objects.filter(stock=stock).last().price
+        if Portfolio.objects.filter(id=pid).count() == 0:
+            return Response("PORTFOLIO " + str(pid) + " DOES NOT EXIST", status=status.HTTP_404_NOT_FOUND)
+        portfolio = Portfolio.objects.get(id=pid)
+        stock_cost = price * amount
 
-            payment = Transaction(portfolio=portfolio, stock=cash_stock, amount=stock_cost * (-1), time=time, price=1)
-            payment.save()
-            new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
+        self.check_object_permissions(self.request, portfolio)
 
-            new_transaction.save()
+        if portfolio_cash <= stock_cost:
+            return Response("NOT ENOUGH CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
 
-            return Response("SUCCESS", status=status.HTTP_200_OK)
-        except:
-            return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
+        payment = Transaction(portfolio=portfolio, stock=cash_stock, amount=stock_cost * (-1), time=time, price=1)
+        payment.save()
+        new_transaction = Transaction(portfolio=portfolio, stock=stock, amount=amount, time=time, price=price)
+
+        new_transaction.save()
+
+        return Response("SUCCESS", status=status.HTTP_200_OK)
+
+        # return Response("SOMETHING WRONG IN REQUEST DATA", status=status.HTTP_400_BAD_REQUEST)
 
 
 class ROICalculator(GenericAPIView):
