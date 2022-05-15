@@ -73,6 +73,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "https://sdm-folio.herokuapp.com",
+    "https://folio-backend-staging.herokuapp.com",
 ]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_URLS_REGEX = r"^/.*$"
@@ -86,7 +87,12 @@ CORS_ALLOW_METHODS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:3000", "http://localhost:3000", "https://sdm-folio.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://sdm-folio.herokuapp.com",
+    "https://folio-backend-staging.herokuapp.com",
+]
 CSRF_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SAMESITE = "None"
 
