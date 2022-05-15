@@ -1,5 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
 DISCOUNT_CODE_TYPES_CHOICES = [
@@ -37,16 +37,16 @@ class MyUserManager(BaseUserManager):
         return user
 
 
-class MyUser(AbstractBaseUser):
+class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=255,
         unique=True,
     )
-    id_number = models.CharField(max_length=255)
+    id_number = models.CharField(max_length=255, default="")
     account = models.CharField(max_length=255, unique=True)
-    username = models.CharField(max_length=255)
-    bankaccount = models.TextField(max_length=255)
-    budget = models.FloatField(default=10000, null=True)
+    username = models.CharField(max_length=255, default="")
+    bankaccount = models.TextField(max_length=255, default="")
+    budget = models.FloatField(default=10000)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = MyUserManager()
@@ -57,18 +57,14 @@ class MyUser(AbstractBaseUser):
     def __str__(self):
         return self.account
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
     @property
     def is_staff(self):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
+        return self.is_admin
+
+    @property
+    def is_superuser(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are superuser
         return self.is_admin

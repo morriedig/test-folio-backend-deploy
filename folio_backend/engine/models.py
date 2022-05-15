@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.conf import settings
 from django.db import models
 
@@ -46,10 +48,20 @@ class Stock(models.Model):
         managed = True
         db_table = "stock"
 
+    @property
+    def last_day_change(self):
+        price_last_time = self.price.last().time
+        price_last_second = self.price.get(time=price_last_time - timedelta(days=1)).price
+        price_last = self.price.last().price
+        return (price_last - price_last_second) / price_last
+
+    def last_price(self):
+        return self.price.last().price
+
 
 class Stockprice(models.Model):
     # id = models.BigIntegerField(primary_key = True)
-    stock = models.ForeignKey(Stock, models.CASCADE, db_column="stock")
+    stock = models.ForeignKey(Stock, models.CASCADE, db_column="stock", related_name="price")
     time = models.DateTimeField()
     price = models.FloatField()
 

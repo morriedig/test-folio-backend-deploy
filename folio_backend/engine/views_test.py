@@ -1,4 +1,5 @@
 import datetime
+import random
 
 import pandas as pd
 
@@ -14,18 +15,18 @@ from .models import *
 def insert_test_data(request):
     u1 = MyUser(
         username="provider1",
-        account="test1",
+        account="testing",
         bankaccount="123456789123",
-        email="r10725022@ntu.edu.tw",
-        password="password",
+        email="r107250222@ntu.edu.tw",
+        password="Asdqwe",
         id_number="A123456789",
         budget=1000000.0,
     )
     u2 = MyUser(
         username="follower1",
-        account="test2",
+        account="test21",
         bankaccount="223891234",
-        email="b06705006@ntu.edu.tw",
+        email="b067050061@ntu.edu.tw",
         password="password",
         id_number="A123456780",
         budget=1000000.0,
@@ -87,6 +88,43 @@ def insert_stock(request):
     return render(request, "insert_test.html", locals())
 
 
+def insert_test_stock_price(request):
+    stocks = Stock.objects.all()
+    m = ""
+    # stocks
+    for i, target_stock in enumerate(stocks):
+        if target_stock.code == "s01":
+            continue
+        sid = target_stock.id
+        stock_data = [[datetime.datetime(2022, 4, i + 1), random.uniform(10, 100)] for i in range(10)]
+        for sd in stock_data:
+            if sd[1] != None:
+                sp = Stockprice(
+                    stock=Stock.objects.filter(id=sid)[0],
+                    price=sd[1],
+                    time=sd[0].replace(tzinfo=pytz.UTC),
+                )
+                sp.save()
+        m += str(target_stock.code) + "\n"
+        # if i == 100:
+        #     break
+    # cash
+    base = datetime.datetime.today()
+    gap = base - datetime.datetime(2022, 4, 1)
+    date_list = [base - datetime.timedelta(days=x) for x in range(gap.days + 1)]
+    date_list = [x.replace(hour=0, minute=0, second=0, microsecond=0) for x in date_list][::-1]
+    for dt in date_list:
+        cash = Stockprice(
+            stock=Stock.objects.filter(code="0000")[0],
+            price=1,
+            time=dt.replace(tzinfo=pytz.UTC),
+        )
+        cash.save()
+    m += "cash"
+    test_message = "insert stock:\n" + str(m) + "price done"
+    return render(request, "insert_test.html", locals())
+
+
 def insert_stock_price(request):
     stocks = Stock.objects.all()
     m = ""
@@ -96,7 +134,7 @@ def insert_stock_price(request):
             continue
         sid = target_stock.id
         stock = twstock.Stock(target_stock.code)
-        target_price = stock.fetch_from(2022, 3)  # 取用2022/03至今每天的交易資料
+        target_price = stock.fetch_from(2022, 4)  # 取用2022/03至今每天的交易資料
         stock_data = [[tp.date, tp.close] for tp in target_price]
         for sd in stock_data:
             if sd[1] != None:
@@ -107,11 +145,11 @@ def insert_stock_price(request):
                 )
                 sp.save()
         m += str(target_stock.code) + "\n"
-        if i == 100:
+        if i == 1:
             break
     # cash
     base = datetime.datetime.today()
-    gap = base - datetime.datetime(2022, 3, 1)
+    gap = base - datetime.datetime(2022, 4, 1)
     date_list = [base - datetime.timedelta(days=x) for x in range(gap.days + 1)]
     date_list = [x.replace(hour=0, minute=0, second=0, microsecond=0) for x in date_list][::-1]
     for dt in date_list:
