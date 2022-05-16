@@ -1,4 +1,6 @@
-from engine.models import Portfolio
+from datetime import datetime
+
+from engine.models import Portfolio, Stock, Transaction
 from engine.rules import PortfolioCreatePermission, PortfolioRetrievePermission, PortfolioUpdatePermission
 from IAM.permissions import IsUserInfoCompleted
 from rest_framework import status
@@ -28,14 +30,18 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
     def get(self, request, *args, **kargs):
         pid = request.query_params.get("pid", "")
         # order_by = request.query_params.get("order", "follow")
-        if pid == "":
-            portfolio = Portfolio.objects.filter().all()
-        else:
-            portfolio = Portfolio.objects.get(id=pid)
+        try:
+            if pid == "":
+                portfolio = Portfolio.objects.filter().all()
+            else:
+                portfolio = Portfolio.objects.filter(id=pid)
+        except:
+            return Response("PORTFOLIO " + str(pid) + " DOES NOT EXIST", status=status.HTTP_400_BAD_REQUEST)
 
         self.check_object_permissions(self.request, portfolio)
-        ans = PortfolioSerializer(portfolio, many=True, context={"user": request.user})
-        return Response(ans.data, status=status.HTTP_200_OK)
+        serializer = PortfolioSerializer(portfolio, many=True, context={"user": request.user})
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
         # return Response("no auth or no profolio", status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **kargs):
@@ -52,6 +58,11 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
             is_public = True
         else:
             is_public = data["public"]
+
+        if request.user.budget < data["budget"]:
+            return Response("NOT ENOUGH MONEY TO AFFORD YOUR CASH", status=status.HTTP_402_PAYMENT_REQUIRED)
+        request.user.budget -= data["budget"]
+        request.user.save()
         new_portfolio = Portfolio(
             name=data["name"],
             description=data["description"],
@@ -62,6 +73,14 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
             is_alive=True,
         )
         new_portfolio.save()
+        new_transaction = Transaction(
+            portfolio=new_portfolio,
+            stock=Stock.objects.get(code="0000"),
+            amount=data["budget"],
+            time=datetime.now(),
+            price=1,
+        )
+        new_transaction.save()
         return Response("SUCCESS", status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kargs):
@@ -72,7 +91,6 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
         has_name = False
         has_description = False
         has_follow_price = False
-        has_budget = False
         has_is_public = False
         if "name" in data:
             has_name = data["name"]
@@ -80,23 +98,20 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
             has_description = data["description"]
         if "follow_price" in data:
             has_follow_price = data["follow_price"]
-        if "budget" in data:
-            has_budget = data["budget"]
         if "is_public" in data:
             has_is_public = data["is_public"]
         try:
             portfolio = Portfolio.objects.get(id=pid)
         except:
             return Response("PORTFOLIO " + str(pid) + " DOES NOT EXIST", status=status.HTTP_400_BAD_REQUEST)
-        self.check_object_permissions(self.request, portfolio)
+        if request.user != portfolio.owner:
+            return Response("YOU CANNOT CHANGE OTHERS PORTFOLIO", status=status.HTTP_403_FORBIDDEN)
         if has_name != False:
             portfolio.name = has_name
         if has_description != False:
             portfolio.description = has_description
         if has_follow_price != False:
             portfolio.follow_price = has_follow_price
-        if has_budget != False:
-            portfolio.budget = has_budget
         if has_is_public != False:
             portfolio.is_public = has_is_public
         portfolio.save()

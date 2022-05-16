@@ -31,4 +31,4 @@ class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
         fields = ("name", "owner_account", "num_of_follower", "roi", "is_follow", "is_owner")
-        ordering = ["num_of_follower", "roi"]
+        # ordering = ["num_of_follower", "roi"]
