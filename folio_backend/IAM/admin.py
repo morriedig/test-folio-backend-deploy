@@ -2,7 +2,6 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-from rules.contrib.admin import ObjectPermissionsModelAdmin
 
 from .models import MyUser
 
