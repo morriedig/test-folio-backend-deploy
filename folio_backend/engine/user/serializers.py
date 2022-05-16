@@ -11,6 +11,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "id_number",
             "username",
             "bankaccount",
+            "picture",
         )
         read_only_fields = ("id",)
 
@@ -38,7 +39,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class UserSelfRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ("id", "account", "email", "id_number", "username", "bankaccount", "budget")
+        fields = ("id", "account", "email", "id_number", "username", "bankaccount", "budget", "picture")
 
 
 class UserSpecificRetrieveSerializer(serializers.ModelSerializer):
