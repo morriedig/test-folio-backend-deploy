@@ -25,8 +25,6 @@ class Portfolio(models.Model):
     # id = models.BigIntegerField(primary_key = True)
     name = models.TextField(default="我是一個投資組合")
     description = models.TextField(default="世界你好")
-    cash = models.FloatField(default=0)
-    stocks = models.TextField(null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, models.CASCADE, db_column="owner")
     follow_price = models.FloatField(default=1000, blank=True)
     budget = models.FloatField(default=10000, blank=True)

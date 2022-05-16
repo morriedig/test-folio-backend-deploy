@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.utils import timezone as datetime
 from engine.models import *
 
 
@@ -36,3 +37,30 @@ def getStock(pid):
         stock_list.append(stock["stock"])
         stock_amount_list.append(stock["total_amount"])
     return stock_list, stock_amount_list
+
+
+def getROI(pid, days):
+
+    today = datetime.now()
+    start_date = today - datetime.timedelta(days=days)
+    portfolio = Portfolio.objects.get(id=pid)
+    value_now = 0
+    value_before = 0
+    transaction_now = (
+        Transaction.objects.filter(portfolio=portfolio).values("stock").annotate(total_amount=Sum("amount"))
+    )
+    transaction_before_start_time = (
+        Transaction.objects.filter(portfolio=portfolio, time__lt=start_date)
+        .values("stock")
+        .annotate(total_amount=Sum("amount"))
+    )
+
+    for stock in transaction_now:
+        stockprice = Stockprice.objects.filter(stock=stock["stock"]).order_by("-time")[0]
+        value_now += stock["total_amount"] * stockprice.price
+    for stock in transaction_before_start_time:
+        stockprice = Stockprice.objects.filter(stock=stock["stock"]).order_by("-time")[0]
+        value_before += stock["total_amount"] * stockprice.price
+
+    roi = (value_now - value_before) / portfolio.budget
+    return round(roi, 4) * 100
