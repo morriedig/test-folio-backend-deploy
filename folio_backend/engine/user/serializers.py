@@ -46,3 +46,9 @@ class UserSpecificRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
         fields = ("id", "account", "email", "id_number", "username")
+
+
+class PublicUserSpecificRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ("id", "account")
