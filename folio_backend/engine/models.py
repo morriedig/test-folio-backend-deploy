@@ -35,6 +35,10 @@ class Portfolio(models.Model):
         managed = True
         db_table = "portfolio"
 
+    @property
+    def num_follower(self):
+        return self.follow_set.all().filter(is_alive=True).count()
+
 
 class Stock(models.Model):
     # id = models.AutoField(primary_key = True)
@@ -81,17 +85,3 @@ class Transaction(models.Model):
         managed = True
         db_table = "transaction"
         # unique_together = (("portfolio", "stock"),)
-
-
-# class User(models.Model):
-#     # id = models.BigIntegerField(primary_key = True)
-#     name = models.TextField(default="我是已閱讀並同意以上條款的帳號")
-#     bankaccount = models.TextField(default="123456789")
-#     email = models.TextField(default="iHaveNoEmail")
-#     password = models.TextField(default="")
-#     budget = models.FloatField(default=10000, null=True)
-#     id_number = models.TextField(default="A123456789", blank=True)
-
-#     class Meta:
-#         managed = True
-#         db_table = "user"
