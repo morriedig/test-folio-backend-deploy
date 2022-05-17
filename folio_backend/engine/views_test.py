@@ -75,7 +75,7 @@ def insert_test_data(request):
 
 
 def insert_stock(request):
-    twstocks = pd.read_csv("engine/twse_equities.csv")
+    twstocks = pd.read_csv("folio_backend/engine/twse_equities.csv")
     stocks = twstocks[(twstocks["market"] == "上市") & (twstocks["type"] == "股票")]
     for i, stock in stocks.iterrows():
         s = Stock(code=stock["code"], name=stock["name"], group=stock["group"])
