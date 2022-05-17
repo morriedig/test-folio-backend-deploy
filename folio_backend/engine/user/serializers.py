@@ -37,18 +37,37 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
 
 class UserSelfRetrieveSerializer(serializers.ModelSerializer):
+    num_follower = serializers.SerializerMethodField()
+
     class Meta:
         model = MyUser
-        fields = ("id", "account", "email", "id_number", "username", "bankaccount", "budget", "picture")
+        fields = ("id", "account", "email", "id_number", "username", "bankaccount", "budget", "num_follower", "picture")
+
+    def get_num_follower(self, obj):
+        return get_user_num_follower(obj)
 
 
 class UserSpecificRetrieveSerializer(serializers.ModelSerializer):
+    num_follower = serializers.SerializerMethodField()
+
     class Meta:
         model = MyUser
-        fields = ("id", "account", "email", "id_number", "username")
+        fields = ("id", "account", "email", "username", "num_follower")
+
+    def get_num_follower(self, obj):
+        return get_user_num_follower(obj)
 
 
 class PublicUserSpecificRetrieveSerializer(serializers.ModelSerializer):
+    num_follower = serializers.SerializerMethodField()
+
     class Meta:
         model = MyUser
-        fields = ("id", "account")
+        fields = ("id", "account", "num_follower")
+
+    def get_num_follower(self, obj):
+        return get_user_num_follower(obj)
+
+
+def get_user_num_follower(user):
+    return sum([p.num_follower for p in user.portfolio_set.all().filter(is_alive=True)])
