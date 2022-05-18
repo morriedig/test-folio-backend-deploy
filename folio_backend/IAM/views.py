@@ -179,7 +179,20 @@ class LogoutView(APIView):
         refresh_token = self.request.COOKIES.get("refresh_token")
         token = RefreshToken(token=refresh_token)
         token.blacklist()
-        return Response({"message": "Logout successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+        # clean the refresh token in cookie
+        response = Response()
+        response.set_cookie(
+            key=settings.SIMPLE_JWT["AUTH_COOKIE"],
+            value="",
+            expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+            secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+            httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
+            samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
+        )
+        response.data = {"message": "Logout successfully"}
+        response.status_code = status.HTTP_204_NO_CONTENT
+        return response
 
 
 # TODO: auto-logout in jwt (difficult, since jwt is stateless)
