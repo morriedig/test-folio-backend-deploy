@@ -69,5 +69,12 @@ class PublicUserSpecificRetrieveSerializer(serializers.ModelSerializer):
         return get_user_num_follower(obj)
 
 
+class UserAddValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ("id", "account", "budget")
+        read_only_fields = ("id", "account", "budget")
+
+
 def get_user_num_follower(user):
     return sum([p.num_follower for p in user.portfolio_set.all().filter(is_alive=True)])

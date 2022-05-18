@@ -4,7 +4,7 @@ from .follow_views import FollowAPIView
 from .portfolio.views import PortfolioAPIView
 from .stock_views import StockAPIView
 from .transaction_views import ROICalculator, TransactionAPIView
-from .user.views import UserSelfView, UserSpecificView
+from .user.views import UserAddValueView, UserSelfView, UserSpecificView
 
 urlpatterns = [
     path("transaction/", TransactionAPIView.as_view()),
@@ -15,4 +15,5 @@ urlpatterns = [
     path("user/", UserSelfView.as_view()),
     path("user/<int:pk>/", UserSpecificView.as_view()),
     path("ROI/<int:pid>", ROICalculator.as_view()),
+    path("user/add-value/", UserAddValueView.as_view()),
 ]
