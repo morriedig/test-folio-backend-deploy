@@ -30,5 +30,44 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = ("name", "owner_account", "num_of_follower", "roi", "is_follow", "is_owner")
+        fields = (
+            "name",
+            "owner_account",
+            "description",
+            "follow_price",
+            "budget",
+            "num_of_follower",
+            "roi",
+            "is_public",
+            "is_follow",
+            "is_owner",
+        )
+        # ordering = ["num_of_follower", "roi"]
+
+
+class PublicPortfolioSerializer(serializers.ModelSerializer):
+    num_of_follower = serializers.SerializerMethodField("calculateFollower")
+    owner_account = serializers.SerializerMethodField("getOwnerName")
+    roi = serializers.SerializerMethodField("getROI")
+
+    def calculateFollower(self, portfolio):
+        return Follow.objects.filter(portfolio=portfolio, is_alive=False).count()
+
+    def getOwnerName(self, portfolio):
+        return portfolio.owner.account
+
+    def getROI(self, portfolio):
+        ROI = getROI(portfolio.id, 1)
+        return ROI
+
+    class Meta:
+        model = Portfolio
+        fields = (
+            "name",
+            "owner_account",
+            "description",
+            "follow_price",
+            "num_of_follower",
+            "roi",
+        )
         # ordering = ["num_of_follower", "roi"]

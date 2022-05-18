@@ -28,6 +28,13 @@ def is_transaction_owner(db_user, db_transaction):
     return is_portfolio_owner(db_user, db_transaction.portfolio)
 
 
+@rules.predicate
+def is_portfolio_public(db_user, db_portfolio):
+    if db_portfolio.is_public:
+        return True
+    return False
+
+
 # Permisssions Rules
 rules.add_perm("engine.user.create", always_deny)  # Use IAM to create a new user
 rules.add_perm("engine.user.retrieve", always_allow)
@@ -35,7 +42,7 @@ rules.add_perm("engine.user.update", always_allow)
 rules.add_perm("engine.user.delete", is_staff)
 
 rules.add_perm("engine.portfolio.create", always_allow)
-rules.add_perm("engine.portfolio.retrieve", is_portfolio_owner | is_follower | is_staff)
+rules.add_perm("engine.portfolio.retrieve", is_portfolio_owner | is_follower | is_staff | is_portfolio_public)
 rules.add_perm("engine.portfolio.update", is_portfolio_owner | is_staff)
 rules.add_perm("engine.portfolio.delete", is_portfolio_owner | is_staff)
 
