@@ -164,8 +164,8 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-        #         # "IAM.authenticate.CustomAuthentication",
+        # "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "IAM.authenticate.JWTAuthenticationSafe",
     ],
 }
 
