@@ -37,8 +37,8 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
                 portfolio = Portfolio.objects.filter(id=pid)
         except:
             return Response("PORTFOLIO " + str(pid) + " DOES NOT EXIST", status=status.HTTP_400_BAD_REQUEST)
-
-        self.check_object_permissions(self.request, portfolio)
+        for p in portfolio:
+            self.check_object_permissions(self.request, p)
         serializer = PortfolioSerializer(portfolio, many=True, context={"user": request.user})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
