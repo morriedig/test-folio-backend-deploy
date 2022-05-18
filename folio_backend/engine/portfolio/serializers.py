@@ -6,6 +6,7 @@ from rest_framework import serializers
 class PortfolioSerializer(serializers.ModelSerializer):
     num_of_follower = serializers.SerializerMethodField("calculateFollower")
     owner_account = serializers.SerializerMethodField("getOwnerName")
+    owner_id = serializers.SerializerMethodField("getOwnerId")
     roi = serializers.SerializerMethodField("getROI")
     is_follow = serializers.SerializerMethodField("getIsFollow")
     is_owner = serializers.SerializerMethodField("getIsOwner")
@@ -15,6 +16,9 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     def getOwnerName(self, portfolio):
         return portfolio.owner.account
+
+    def getOwnerId(self, portfolio):
+        return portfolio.owner.id
 
     def getROI(self, portfolio):
         ROI = getROI(portfolio.id, 1)
@@ -31,7 +35,9 @@ class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
         fields = (
+            "id",
             "name",
+            "owner_id",
             "owner_account",
             "description",
             "follow_price",
@@ -42,13 +48,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
             "is_follow",
             "is_owner",
         )
-        # ordering = ["num_of_follower", "roi"]
 
 
 class PublicPortfolioSerializer(serializers.ModelSerializer):
     num_of_follower = serializers.SerializerMethodField("calculateFollower")
+    owner_id = serializers.SerializerMethodField("getOwnerId")
     owner_account = serializers.SerializerMethodField("getOwnerName")
     roi = serializers.SerializerMethodField("getROI")
+    owner_id = serializers.SerializerMethodField("getOwnerId")
 
     def calculateFollower(self, portfolio):
         return Follow.objects.filter(portfolio=portfolio, is_alive=False).count()
@@ -60,10 +67,15 @@ class PublicPortfolioSerializer(serializers.ModelSerializer):
         ROI = getROI(portfolio.id, 1)
         return ROI
 
+    def getOwnerId(self, portfolio):
+        return portfolio.owner.id
+
     class Meta:
         model = Portfolio
         fields = (
+            "id",
             "name",
+            "owner_id",
             "owner_account",
             "description",
             "follow_price",
