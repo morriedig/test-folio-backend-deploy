@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-
+from rules.contrib.admin import ObjectPermissionsModelAdmin
 from .models import MyUser
 
 
@@ -47,15 +47,25 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(ObjectPermissionsModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ("account", "username", "email", "id_number", "bankaccount", "budget", "id_number", "is_admin")
+    list_display = (
+        "account",
+        "username",
+        "email",
+        "id_number",
+        "bankaccount",
+        "budget",
+        "id_number",
+        "is_admin",
+        "picture",
+    )
     list_filter = ("is_admin",)
     fieldsets = (
         (None, {"fields": ("account", "password")}),
-        ("Personal info", {"fields": ("username", "id_number", "email", "bankaccount", "budget")}),
+        ("Personal info", {"fields": ("username", "id_number", "email", "bankaccount", "budget", "picture")}),
         ("Permissions", {"fields": ("is_admin",)}),
     )
     add_fieldsets = (

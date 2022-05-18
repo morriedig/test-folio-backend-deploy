@@ -46,6 +46,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     account = models.CharField(max_length=255, unique=True)
     username = models.CharField(max_length=255, default="")
     bankaccount = models.TextField(max_length=255, default="")
+    picture = models.TextField(default="")
     budget = models.FloatField(default=10000)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
