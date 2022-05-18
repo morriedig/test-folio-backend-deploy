@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.db.models import Q
 from engine.models import Portfolio, Stock, Transaction
 from engine.rules import PortfolioCreatePermission, PortfolioRetrievePermission, PortfolioUpdatePermission
 from IAM.models import MyUser
@@ -34,7 +35,10 @@ class PortfolioAPIView(GenericAPIView, ListModelMixin):
         # order_by = request.query_params.get("order", "follow")
         try:
             if pid == "":
-                portfolio = Portfolio.objects.filter(is_public=True, is_alive=True).all()
+                if isinstance(request.user, MyUser):
+                    portfolio = Portfolio.objects.filter(Q(is_public=True) | Q(owner=request.user), is_alive=True).all()
+                else:
+                    portfolio = Portfolio.objects.filter(is_public=True, is_alive=True).all()
             else:
                 portfolio = Portfolio.objects.filter(id=pid)
         except:
