@@ -20,23 +20,32 @@ jobs:
                   python -m pip install --upgrade pip
                   pip install poetry
                   poetry install
-
+            - name: pre-commit
+              run: |
+                  poetry run pre-commit run -a
+            - name: migrate
+              run: |
+                  python manage.py migrate
+            - name: unit test
+              run: |
+                  python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
+                  python manage.py test engine.tests.FollowCase --settings=folio_backend.settings_test
     heroku_git_deploy_job:
-      runs-on: ubuntu-latest
-      name: Git Deploy job- A job to deploy django app to heroku using git
-      if: ${{ github.ref == 'refs/heads/staging' }}
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
-        - name: Add remote origin
-          run: |
-            git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-        - name: Deploy django to heroku
-          uses: akhileshns/heroku-deploy@v3.12.12
-          with: 
-            heroku_app_name : ${{ secrets.HEROKU_APP_NAME }}
-            heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-            heroku_email_address: 'ntu1101sdm.finalproj@gmail.com'
-            use_git: true
-            branch: staging
-            force_push: true
+        runs-on: ubuntu-latest
+        name: Git Deploy job- A job to deploy django app to heroku using git
+        if: ${{ github.ref == 'refs/heads/staging' }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Add remote origin
+              run: |
+                  git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+            - name: Deploy django to heroku
+              uses: akhileshns/heroku-deploy@v3.12.12
+              with:
+                  heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+                  heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+                  heroku_email_address: "ntu1101sdm.finalproj@gmail.com"
+                  use_git: true
+                  branch: staging
+                  force_push: true
