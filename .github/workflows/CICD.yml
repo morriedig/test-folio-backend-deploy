@@ -75,5 +75,3 @@ jobs:
             use_git: true
             branch: staging
             force_push: true
-        - name: Run migration
-          run: heroku run python manage.py migrate
