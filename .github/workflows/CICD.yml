@@ -25,11 +25,11 @@ jobs:
                   poetry run pre-commit run -a
             - name: migrate
               run: |
-                  cd folio-backend && python manage.py migrate
+                  cd ../../../folio-backend && python manage.py migrate
             - name: unit test
               run: |
-                  cd folio-backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
-                  cd folio-backend && python manage.py test engine.tests.FollowCase --settings=folio_backend.settings_test
+                  cd ../../../folio-backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
+                  cd ../../../folio-backend && python manage.py test engine.tests.FollowCase --settings=folio_backend.settings_test
     heroku_git_deploy_job:
         needs: health-checkup-job
         runs-on: ubuntu-latest
