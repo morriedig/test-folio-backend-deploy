@@ -21,11 +21,10 @@ jobs:
                   python -m pip install --upgrade pip
                   pip install poetry
                   poetry install
-                  pip install -r requirements.txt
             - name: pre-commit
               run: |
                   poetry run pre-commit run -a
-            # - name: migrate
+            # - name: migrpate
             #   run: |
             #     #   echo "ls -la $GITHUB_EVENT_PATH"
             #     #   echo "ls -la $GITHUB_WORKSPACE"
