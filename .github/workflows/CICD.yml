@@ -25,8 +25,8 @@ jobs:
                   poetry run pre-commit run -a
             - name: migrate
               run: |
-                  "ls -la $GITHUB_EVENT_PATH"
-                  "ls -la $GITHUB_WORKSPACE"
+                  echo "ls -la $GITHUB_EVENT_PATH"
+                  echo "ls -la $GITHUB_WORKSPACE"
                   ls
                   cd ../../../folio-backend && python manage.py migrate
             - name: unit test
