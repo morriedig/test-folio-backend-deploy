@@ -33,7 +33,7 @@ jobs:
     heroku_git_deploy_job:
         runs-on: ubuntu-latest
         name: Git Deploy job- A job to deploy django app to heroku using git
-        if: ${{ github.ref == 'refs/heads/staging' }}
+        if: ${{ success() && github.ref == 'refs/heads/staging' }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
