@@ -27,13 +27,13 @@ jobs:
               run: |
                 #   echo "ls -la $GITHUB_EVENT_PATH"
                 #   echo "ls -la $GITHUB_WORKSPACE"
-                #   cd folio-backend && echo "ls -la $GITHUB_WORKSPACE"
+                #   cd folio_backend && echo "ls -la $GITHUB_WORKSPACE"
                   ls
-                  cd python folio-backend/manage.py migrate
+                  python folio_backend/manage.py migrate
             - name: unit test
               run: |
-                  cd folio-backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
-                  cd folio-backend && python manage.py test engine.tests.FollowCase --settings=folio_backend.settings_test
+                  cd folio_backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
+                  cd folio_backend && python manage.py test engine.tests.FollowCase --settings=folio_backend.settings_test
     heroku_git_deploy_job:
         needs: health-checkup-job
         runs-on: ubuntu-latest
