@@ -17,19 +17,20 @@ jobs:
                   python-version: ${{ matrix.python-version }}
             - name: Install Dependencies
               run: |
+                  pip3 install django
                   python -m pip install --upgrade pip
                   pip install poetry
                   poetry install
             - name: pre-commit
               run: |
                   poetry run pre-commit run -a
-            - name: migrate
-              run: |
-                #   echo "ls -la $GITHUB_EVENT_PATH"
-                #   echo "ls -la $GITHUB_WORKSPACE"
-                #   cd folio_backend && echo "ls -la $GITHUB_WORKSPACE"
-                  ls
-                  python folio_backend/manage.py migrate
+            # - name: migrate
+            #   run: |
+            #     #   echo "ls -la $GITHUB_EVENT_PATH"
+            #     #   echo "ls -la $GITHUB_WORKSPACE"
+            #     #   cd folio_backend && echo "ls -la $GITHUB_WORKSPACE"
+            #       ls
+            #       python folio_backend/manage.py migrate
             - name: unit test
               run: |
                   cd folio_backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
