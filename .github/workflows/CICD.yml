@@ -29,7 +29,7 @@ jobs:
                 #   echo "ls -la $GITHUB_WORKSPACE"
                 #   cd folio-backend && echo "ls -la $GITHUB_WORKSPACE"
                   ls
-                  cd folio-backend && python manage.py migrate
+                  cd python folio-backend/manage.py migrate
             - name: unit test
               run: |
                   cd folio-backend && python manage.py test engine.tests.StockCase --settings=folio_backend.settings_test
